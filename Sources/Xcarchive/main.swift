@@ -5,6 +5,8 @@ import Foundation
 import PathKit
 import Commands
 
+let appVersion = "0.1.0"
+
 let cli = CommandLineKit.CommandLine()
 cli.formatOutput = { s, type in
     var string: String
@@ -18,12 +20,12 @@ cli.formatOutput = { s, type in
 
 let projectPathOption = StringOption(
     shortFlag: "p", longFlag: "project", required: true,
-    helpMessage: "Root path of your Xcode project. Default is current folder.")
+    helpMessage: "Root path of your Xcode project")
 cli.addOption(projectPathOption)
 
 let outputPathOption = StringOption(
     shortFlag: "o", longFlag: "output",
-    helpMessage: "Root path of product. Default is current projectPath/xcarchive")
+    helpMessage: "Package path. Default is current project path /xcarchive")
 cli.addOption(outputPathOption)
 
 let configurationOption = StringOption(
@@ -31,11 +33,28 @@ let configurationOption = StringOption(
     helpMessage: "The name of pbxproj buildConfigurations. Default is Release")
 cli.addOption(configurationOption)
 
+let versionOption = BoolOption(longFlag: "version", helpMessage: "Print version.")
+cli.addOption(versionOption)
+
+let helpOption = BoolOption(shortFlag: "h", longFlag: "help",
+                      helpMessage: "Print this help message.")
+cli.addOption(helpOption)
+
 do {
     try cli.parse()
 } catch {
     cli.printUsage(error)
     exit(EX_USAGE)
+}
+
+if helpOption.value {
+    cli.printUsage()
+    exit(EX_OK)
+}
+
+if versionOption.value {
+    print(appVersion)
+    exit(EX_OK);
 }
 
 let projectPath = projectPathOption.value ?? ""
@@ -46,9 +65,9 @@ if projectPath.isEmpty || !Path(projectPath).exists {
 
 struct KeyConfiguation {
     /// 企业微信机器人webhook地追
-    static let robotURL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=91fa466c-2c8b-4ad3-9ca9-3429e14ca9fa"
+    static let robotURL = ""
     /// 上传蒲公英key
-    static let pgyKey = "5628e20e85a8ee57e82b69d45830fef8"
+    static let pgyKey = ""
 }
 
 /// 打包输出路径
@@ -86,11 +105,15 @@ ExportOptions(xcodeprojPath: project.xcodeprojPath,
 project.exportOptionsPlist = exportOptionsOutput
 project.export()
 
-let pgyUpload =  PgyerUpload(key: KeyConfiguation.pgyKey)
-pgyUpload.uploadPgyer(ipaPath: project.ipaPath)
+if !KeyConfiguation.pgyKey.isEmpty {
+    let pgyUpload =  PgyerUpload(key: KeyConfiguation.pgyKey)
+    pgyUpload.upload(ipaPath: project.ipaPath)
+    
+    if !KeyConfiguation.robotURL.isEmpty {
+        robot.sendArticle(title: pgyUpload.title(),
+                                 description: pgyUpload.desc(),
+                                 url: pgyUpload.shortURL())
+    }
+}
 
-robot.sendArticle(title: pgyUpload.title(),
-                         description: pgyUpload.desc(),
-                         url: pgyUpload.shortURL())
-
-//try? path.delete()
+try? path.delete()

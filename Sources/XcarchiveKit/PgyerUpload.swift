@@ -41,14 +41,14 @@ public class PgyerUpload {
     }
     
     @discardableResult
-    public func uploadPgyer(ipaPath: String) -> [String: Any] {
+    public func upload(ipaPath: String) -> [String: Any] {
         
         self.response.removeAll()
         
         var response: [String: Any] = [:]
         
         guard !key.isEmpty else {
-            print("PgyerUpload.key is invalid".red)
+            print("the KeyConfiguation.pgykey is invalid".red)
             return response
         }
         
@@ -67,7 +67,7 @@ public class PgyerUpload {
         let queue = DispatchQueue.init(label: "uplaod pgy")
         upload.uploadProgress(queue: queue) { progress in
             let p = Int((Double(progress.completedUnitCount) / Double(progress.totalUnitCount)) * 100)
-            print("upload:\(p)%")
+            print("upload:\(p)%".lightCyan)
         }
         upload.responseData(queue: queue) { dataResponse in
             switch dataResponse.result {
@@ -75,15 +75,15 @@ public class PgyerUpload {
                 if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String : Any],
                     let jsonData = json["data"] as? [String : Any] {
                     let suffix = (jsonData["buildShortcutUrl"] as? String) ?? ""
-                    print("upload success".bold.lightCyan, "https://www.pgyer.com/"+suffix)
+                    print("upload success".lightGreen, "https://www.pgyer.com/"+suffix)
                     response = jsonData
                     group = false
                 } else {
-                    print("upload success".bold.lightCyan)
+                    print("upload success".lightGreen)
                     group = false
                 }
             case .failure(let error):
-                print("upload failure: \(error)".bold.red)
+                print("upload failure: \(error)".red)
                 group = false
             }
         }

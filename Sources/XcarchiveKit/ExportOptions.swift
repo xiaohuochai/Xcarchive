@@ -8,6 +8,7 @@
 import Foundation
 import XcodeProj
 import PathKit
+import Rainbow
 
 public struct ExportOptions {
     
@@ -36,6 +37,7 @@ public struct ExportOptions {
     }
     
     public func write() {
+        print("generate ExportOptions.plist ...".lightGreen)
         let exportOptionData = exportOptionsData()
         if #available(macOS 10.13, *) {
             try? (exportOptionData as NSDictionary).write(to: URL(fileURLWithPath: outputPath))

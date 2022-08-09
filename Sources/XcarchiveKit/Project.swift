@@ -74,7 +74,7 @@ public extension Project {
     
     func podInstall() {
         guard needPodInstall() else { return }
-        print("pod install".bold.lightCyan)
+        print("pod install...".lightGreen)
         Pod(path: path).install()
     }
 }
@@ -90,7 +90,7 @@ public extension Project {
                          "-destination", "generic/platform=iOS",
                          "-quiet"
                         ]
-        print("clean:".bold.lightCyan, arguments.kj.JSONString(prettyPrinted: true))
+        print("clean...".lightGreen)
         return Process.make(arguments: arguments).execute()
     }
     
@@ -101,9 +101,9 @@ public extension Project {
                          "-scheme", scheme,
                          "-configuration",configuration,
                          "-destination", "generic/platform=iOS",
-                         "-archivePath", archivePath,
+                         "-archivePath", archivePath
                         ]
-        print("archive:".bold.lightCyan, arguments.kj.JSONString(prettyPrinted: true))
+        print("archive...".lightGreen)
         return Process.make(arguments: arguments).execute()
     }
     
@@ -112,10 +112,9 @@ public extension Project {
         let arguments = ["-exportArchive",
                          "-archivePath",archivePath,
                          "-exportPath",exportPath,
-                         "-exportOptionsPlist",exportOptionsPlist,
-//                         "-quiet"
+                         "-exportOptionsPlist",exportOptionsPlist
                         ]
-        print("export:".bold.lightCyan,arguments.kj.JSONString(prettyPrinted: true))
+        print("export...".lightGreen)
         return Process.make(arguments: arguments).execute()
     }
 }
