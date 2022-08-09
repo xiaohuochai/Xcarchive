@@ -23,7 +23,7 @@ Xcarchive is a simple command-line util to package ios and upload pgy.
 > swift build -c release
 
 # Then copy the executable to your PATH, such as `/usr/local/bin`
-> sudo cp .build/release/Xcarchive /usr/local/bin/Xcarchive
+> sudo cp .build/release/Xcarchive /usr/local/bin/xcarchive
 ```
 
 Xcarchive should be compiled, tested and installed into the `/usr/local/bin`.
@@ -33,7 +33,7 @@ Xcarchive should be compiled, tested and installed into the `/usr/local/bin`.
 Just navigate to your project folder, then:
 
 ```shell
-> Xcarchive
+> xcarchive
 ```
 蒲公英配置
 ```shell
@@ -51,9 +51,9 @@ Just navigate to your project folder, then:
 Xcarchive supports some arguments. You can find it by:
 
 ```shell
-> Xcarchive --help
+> xcarchive --help
 
-    Usage: ./Xcarchive [options]
+    Usage: ./xcarchive [options]
     -p, --project:
         Root path of your Xcode project
     -o, --output:
