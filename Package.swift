@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,6 @@ import PackageDescription
 let package = Package(
     name: "Xcarchive",
     platforms: [.macOS("10.13")],
-    swiftLanguageVersions: [.v5]
     products: [
         .executable(name: "Xcarchive", targets: ["Xcarchive"]),
     ],
@@ -30,5 +29,6 @@ let package = Package(
         .testTarget(
             name: "XcarchiveTests",
             dependencies: ["Xcarchive"]),
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
