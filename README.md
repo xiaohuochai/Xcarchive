@@ -17,6 +17,10 @@ Xcarchive is a simple command-line util to package ios and upload pgy.
 
 ### Install
 
+```
+  SDKROOT=(xcrun --sdk macosx --show-sdk-path)
+```
+
 ```bash
 > git clone https://github.com/wangteng/Xcarchive.git
 > cd Xcarchive
@@ -35,7 +39,7 @@ Just navigate to your project folder, then:
 ```shell
 > xcarchive
 ```
-蒲公英配置
+Configuation
 ```shell
 
   in Main.swift
