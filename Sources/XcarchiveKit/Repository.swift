@@ -63,10 +63,10 @@ public struct Repository {
         }
     }
     
-    public let path: String
+    public let directoryURL: URL
     
-    public init(path: String) {
-        self.path = path
+    public init(directoryURL: URL) {
+        self.directoryURL = directoryURL
     }
     
     @discardableResult
@@ -74,7 +74,7 @@ public struct Repository {
         let task = Process()
         task.launchPath = "/usr/bin/git"
         task.arguments = command.arguments
-        task.currentDirectoryURL = URL(fileURLWithPath: path)
+        task.currentDirectoryURL = directoryURL
         let pipe = Pipe()
         task.standardOutput = pipe
         task.launch()

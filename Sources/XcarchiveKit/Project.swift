@@ -8,6 +8,7 @@
 import Foundation
 import Rainbow
 import KakaJSON
+import Logger
 
 public struct Project {
     
@@ -51,15 +52,22 @@ public struct Project {
         
         guard let allFileNames = try? Project.fileManager.contentsOfDirectory(atPath: path),
         !allFileNames.isEmpty else {
-            return
+            Logger.error("not find *.xcodeproj")
+            exit(EX_USAGE)
         }
-        self.name = allFileNames.first(where: { $0.hasSuffix(".xcodeproj") })?.components(separatedBy: ".").first ?? ""
+        let name = allFileNames.first(where: { $0.hasSuffix(".xcodeproj") })?.components(separatedBy: ".").first ?? ""
         
+        guard !name.isEmpty else {
+            Logger.error("not find *.xcodeproj")
+            exit(EX_USAGE)
+        }
+                
+        self.name = name
+                
         let xcschemesPath = path+"/"+self.name+".xcodeproj/xcshareddata/xcschemes"
         guard let xcschemes = try? Project.fileManager.contentsOfDirectory(atPath: xcschemesPath) else { return }
         scheme = xcschemes.first?.components(separatedBy: ".").first ?? ""
     }
-  
 }
 
 public extension Project {
@@ -74,7 +82,7 @@ public extension Project {
     
     func podInstall() {
         guard needPodInstall() else { return }
-        print("pod install...".lightGreen)
+        Logger.info("pod install ...")
         Pod(path: path).install()
     }
 }
@@ -88,9 +96,8 @@ public extension Project {
                          "-scheme", scheme,
                          "-configuration",configuration,
                          "-destination", "generic/platform=iOS",
-                         "-quiet"
                         ]
-        print("clean...".lightGreen)
+        Logger.info("clean workspace ...")
         return Process.make(arguments: arguments).execute()
     }
     
@@ -103,7 +110,7 @@ public extension Project {
                          "-destination", "generic/platform=iOS",
                          "-archivePath", archivePath
                         ]
-        print("archive...".lightGreen)
+        Logger.info("archive ...")
         return Process.make(arguments: arguments).execute()
     }
     
@@ -114,7 +121,7 @@ public extension Project {
                          "-exportPath",exportPath,
                          "-exportOptionsPlist",exportOptionsPlist
                         ]
-        print("export...".lightGreen)
+        Logger.info("export ipa ...")
         return Process.make(arguments: arguments).execute()
     }
 }

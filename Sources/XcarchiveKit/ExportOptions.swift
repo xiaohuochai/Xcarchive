@@ -9,6 +9,7 @@ import Foundation
 import XcodeProj
 import PathKit
 import Rainbow
+import Logger
 
 public struct ExportOptions {
     
@@ -37,7 +38,7 @@ public struct ExportOptions {
     }
     
     public func write() {
-        print("generate ExportOptions.plist ...".lightGreen)
+        Logger.info("generate exportOptions.plist file: \(outputPath)")
         let exportOptionData = exportOptionsData()
         if #available(macOS 10.13, *) {
             try? (exportOptionData as NSDictionary).write(to: URL(fileURLWithPath: outputPath))

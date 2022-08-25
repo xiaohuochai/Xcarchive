@@ -4,6 +4,7 @@ import XcarchiveKit
 import Foundation
 import PathKit
 import Commands
+import Logger
 
 let appVersion = "0.1.0"
 
@@ -77,7 +78,7 @@ let outputPath = outputPathOption.value ?? (projectPath+"/xcarchive")
 let configuration = configurationOption.value ?? "Release"
 
 /// 导出ipa所需要的配置文件
-let exportOptionsOutput = outputPath+"/ExportOptions.plist"
+let exportOptionsOutput = outputPath+"/exportOptions.plist"
 
 let path = Path(outputPath)
 if path.exists {

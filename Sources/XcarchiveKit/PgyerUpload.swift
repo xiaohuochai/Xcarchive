@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import PathKit
 import Rainbow
+import Logger
 
 public class PgyerUpload {
     
@@ -48,12 +49,12 @@ public class PgyerUpload {
         var response: [String: Any] = [:]
         
         guard !key.isEmpty else {
-            print("the KeyConfiguation.pgykey is invalid".red)
+            Logger.error("The KeyConfiguation.pgykey is invalid")
             return response
         }
         
         guard Path(ipaPath).exists else {
-            print("ipa not found at path "+ipaPath.red)
+            Logger.error("Ipa not found: "+ipaPath)
             return response
         }
         
@@ -64,10 +65,12 @@ public class PgyerUpload {
             formdata.append(URL(fileURLWithPath: ipaPath), withName: "file")
         },to: uploadURL)
         
+        Logger.info("Begin upload: "+uploadURL.absoluteString)
+        
         let queue = DispatchQueue.init(label: "uplaod pgy")
         upload.uploadProgress(queue: queue) { progress in
             let p = Int((Double(progress.completedUnitCount) / Double(progress.totalUnitCount)) * 100)
-            print("upload:\(p)%".lightCyan)
+            Logger.info("Upload...: [\(p)%]", mode: .inLine)
         }
         upload.responseData(queue: queue) { dataResponse in
             switch dataResponse.result {
@@ -75,15 +78,15 @@ public class PgyerUpload {
                 if let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String : Any],
                     let jsonData = json["data"] as? [String : Any] {
                     let suffix = (jsonData["buildShortcutUrl"] as? String) ?? ""
-                    print("upload success".lightGreen, "https://www.pgyer.com/"+suffix)
+                    Logger.info("Upload Success " + "https://www.pgyer.com/"+suffix)
                     response = jsonData
                     group = false
                 } else {
-                    print("upload success".lightGreen)
+                    Logger.info("Upload success")
                     group = false
                 }
             case .failure(let error):
-                print("upload failure: \(error)".red)
+                Logger.error("Upload failure \(error)")
                 group = false
             }
         }
