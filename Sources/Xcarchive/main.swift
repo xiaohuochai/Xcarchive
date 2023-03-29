@@ -69,13 +69,6 @@ if projectPath.isEmpty || !Path(projectPath).exists {
     exit(EX_USAGE)
 }
 
-struct KeyConfiguation {
-    /// 企业微信机器人webhook地追
-    static let robotURL = ""
-    /// 上传蒲公英key
-    static let pgyKey = "5628e20e85a8ee57e82b69d45830fef8"
-}
-
 /// 打包输出路径
 let outputPath = outputPathOption.value ?? (projectPath+"/xcarchive")
 
@@ -88,9 +81,6 @@ if path.exists {
     try? path.delete()
 }
 try? path.mkdir()
-
-let robot = Robot.shared
-robot.resource = KeyConfiguation.robotURL
 
 let exportOptionPath = exportOption.value ?? ""
 if exportOptionPath.isEmpty || !Path(exportOptionPath).exists {
@@ -107,6 +97,37 @@ project.podInstall()
 
 project.archive()
 
+project.exportOptionsPlist = exportOptionPath
+project.export()
+
+uploadIpa()
+
+try? path.delete()
+
+func uploadIpa() {
+    
+    struct KeyConfiguation {
+        /// 企业微信机器人webhook地追
+        static let robotURL = ""
+        /// 上传蒲公英key
+        static let pgyKey = ""
+    }
+    
+    let robot = Robot.shared
+    robot.resource = KeyConfiguation.robotURL
+
+    if !KeyConfiguation.pgyKey.isEmpty {
+        let pgyUpload =  PgyerUpload(key: KeyConfiguation.pgyKey)
+        pgyUpload.upload(ipaPath: project.ipaPath)
+        
+        if !KeyConfiguation.robotURL.isEmpty {
+            robot.sendArticle(title: pgyUpload.title(),
+                                     description: pgyUpload.desc(),
+                                     url: pgyUpload.shortURL())
+        }
+    }
+}
+
 /// 导出ipa所需要的配置文件
 //let exportOptionsOutput = outputPath+"/exportOptions.plist"
 //ExportOptions(xcodeprojPath: project.xcodeprojPath,
@@ -114,22 +135,3 @@ project.archive()
 //              configurationName: configuration,
 //              outputPath: exportOptionsOutput)
 //    .write()
-
-
-
-
-project.exportOptionsPlist = exportOptionPath
-project.export()
-
-if !KeyConfiguation.pgyKey.isEmpty {
-    let pgyUpload =  PgyerUpload(key: KeyConfiguation.pgyKey)
-    pgyUpload.upload(ipaPath: project.ipaPath)
-    
-    if !KeyConfiguation.robotURL.isEmpty {
-        robot.sendArticle(title: pgyUpload.title(),
-                                 description: pgyUpload.desc(),
-                                 url: pgyUpload.shortURL())
-    }
-}
-
-try? path.delete()
