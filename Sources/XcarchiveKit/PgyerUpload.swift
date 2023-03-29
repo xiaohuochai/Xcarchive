@@ -82,7 +82,8 @@ public class PgyerUpload {
                     response = jsonData
                     group = false
                 } else {
-                    Logger.info("Upload success")
+                    let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String : Any]  ?? [:]
+                    print(json as Any)
                     group = false
                 }
             case .failure(let error):

@@ -62,7 +62,7 @@ public struct Logger {
         case .warning:
             print(mode.rawValue,level.prefix.yellow,message.yellow)
         case .info:
-            print(mode.rawValue,level.prefix.white,message.white)
+            print(mode.rawValue,level.prefix.green,message.white)
         case .debug:
             print(mode.rawValue,level.prefix.cyan,message.cyan)
         }

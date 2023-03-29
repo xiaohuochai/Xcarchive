@@ -57,6 +57,9 @@ public struct ExportOptions {
         var provisioningProfiles: [String: String] = [:]
         var exportOptions: [String: Any] = ["method": method.rawValue,
                                             "stripSwiftSymbols": true,
+                                            "destination": "export",
+                                            "compileBitcode": false,
+                                            "allowProvisioningUpdates": true,
                                             "thinning": "<none>"]
 
         for conf in xcodeproj.pbxproj.buildConfigurations where conf.name == configurationName {

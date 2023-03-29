@@ -1,0 +1,10 @@
+version: "Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)"
+options: "7c7893e13398b6e0c7b0718549a405982f7dd598cb3df7d40ec6af500150ae13"
+build_start_time: [1680067398, 473521947]
+build_end_time: [1680067404, 767027854]
+inputs:
+  "/Users/mdd/Desktop/\u8D44\u6599/Developer/CLI/Xcarchive/.build/checkouts/AEXML/Sources/AEXML/Document.swift": [1661394427, 35195827]
+  "/Users/mdd/Desktop/\u8D44\u6599/Developer/CLI/Xcarchive/.build/checkouts/AEXML/Sources/AEXML/Element.swift": [1661394427, 35423755]
+  "/Users/mdd/Desktop/\u8D44\u6599/Developer/CLI/Xcarchive/.build/checkouts/AEXML/Sources/AEXML/Error.swift": [1661394427, 35591602]
+  "/Users/mdd/Desktop/\u8D44\u6599/Developer/CLI/Xcarchive/.build/checkouts/AEXML/Sources/AEXML/Options.swift": [1661394427, 35755157]
+  "/Users/mdd/Desktop/\u8D44\u6599/Developer/CLI/Xcarchive/.build/checkouts/AEXML/Sources/AEXML/Parser.swift": [1661394427, 35915374]

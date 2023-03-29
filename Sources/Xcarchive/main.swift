@@ -34,6 +34,11 @@ let configurationOption = StringOption(
     helpMessage: "The name of pbxproj buildConfigurations. Default is Release")
 cli.addOption(configurationOption)
 
+let exportOption = StringOption(
+    shortFlag: "e", longFlag: "exportOption", required: true,
+    helpMessage: "Root path of your exportOption")
+cli.addOption(exportOption)
+
 let versionOption = BoolOption(longFlag: "version", helpMessage: "Print version.")
 cli.addOption(versionOption)
 
@@ -68,7 +73,7 @@ struct KeyConfiguation {
     /// 企业微信机器人webhook地追
     static let robotURL = ""
     /// 上传蒲公英key
-    static let pgyKey = ""
+    static let pgyKey = "5628e20e85a8ee57e82b69d45830fef8"
 }
 
 /// 打包输出路径
@@ -77,8 +82,6 @@ let outputPath = outputPathOption.value ?? (projectPath+"/xcarchive")
 /// 打包配置名称（对应Xcode中的`Configuration`）
 let configuration = configurationOption.value ?? "Release"
 
-/// 导出ipa所需要的配置文件
-let exportOptionsOutput = outputPath+"/exportOptions.plist"
 
 let path = Path(outputPath)
 if path.exists {
@@ -89,6 +92,12 @@ try? path.mkdir()
 let robot = Robot.shared
 robot.resource = KeyConfiguation.robotURL
 
+let exportOptionPath = exportOption.value ?? ""
+if exportOptionPath.isEmpty || !Path(exportOptionPath).exists {
+    print("-p \(exportOptionPath) is not invalid".red)
+    exit(EX_USAGE)
+}
+
 var project = Project(path: projectPath, outputPath: outputPath)
 project.configuration = configuration
 
@@ -98,12 +107,18 @@ project.podInstall()
 
 project.archive()
 
-ExportOptions(xcodeprojPath: project.xcodeprojPath,
-              method: .ad_hoc,
-              configurationName: configuration,
-              outputPath: exportOptionsOutput)
-    .write()
-project.exportOptionsPlist = exportOptionsOutput
+/// 导出ipa所需要的配置文件
+//let exportOptionsOutput = outputPath+"/exportOptions.plist"
+//ExportOptions(xcodeprojPath: project.xcodeprojPath,
+//              method: .ad_hoc,
+//              configurationName: configuration,
+//              outputPath: exportOptionsOutput)
+//    .write()
+
+
+
+
+project.exportOptionsPlist = exportOptionPath
 project.export()
 
 if !KeyConfiguation.pgyKey.isEmpty {
